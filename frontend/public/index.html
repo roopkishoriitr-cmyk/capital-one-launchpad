@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#16a34a" />
+    <meta name="description" content="KrishiSampann - AI-powered agronomy and financial advisory platform for Indian farmers" />
+    <meta name="keywords" content="agriculture, farming, AI, financial advisory, Indian farmers, crop recommendations" />
+    <meta name="author" content="KrishiSampann Team" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Hindi Font Support -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <title>KrishiSampann - Where Crops Meet Capital</title>
+    
+    <style>
+      /* Custom CSS for better font rendering */
+      body {
+        font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+      
+      /* Loading animation */
+      .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #16a34a;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Offline indicator */
+      .offline-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #dc2626;
+        color: white;
+        text-align: center;
+        padding: 8px;
+        z-index: 9999;
+        display: none;
+      }
+      
+      .offline-indicator.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+    <!-- Offline Indicator -->
+    <div id="offline-indicator" class="offline-indicator">
+      📡 आप ऑफलाइन हैं। कुछ सुविधाएं उपलब्ध नहीं हो सकती हैं।
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      z-index: 10000;
+    ">
+      <div class="loading-spinner"></div>
+      <h1 style="margin-top: 20px; font-size: 24px; font-weight: 600;">KrishiSampann</h1>
+      <p style="margin-top: 10px; opacity: 0.9;">Where Crops Meet Capital</p>
+      <p style="margin-top: 5px; font-size: 14px; opacity: 0.7;">Loading your digital farming companion...</p>
+    </div>
+    
+    <div id="root"></div>
+    
+    <script>
+      // Hide loading screen when app is ready
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(function() {
+              loadingScreen.style.display = 'none';
+            }, 500);
+          }
+        }, 1000);
+      });
+      
+      // Offline detection
+      window.addEventListener('online', function() {
+        document.getElementById('offline-indicator').classList.remove('show');
+      });
+      
+      window.addEventListener('offline', function() {
+        document.getElementById('offline-indicator').classList.add('show');
+      });
+      
+      // Service Worker Registration for PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
